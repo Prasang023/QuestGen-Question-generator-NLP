@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCQ Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        #mcq-container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .question {
+            margin-bottom: 20px;
+        }
+
+        .choices {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .choice {
+            background-color: #e0e0e0;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .choice:hover {
+            background-color: #d0d0d0;
+        }
+    </style>
+</head>
+<body>
+    <div style="text-align: center; margin-top: 20px;">Multiple Choice Question</div>
+    <div id="mcq-container"></div>
+
+    <script>
+        console.log("MCQ is Here !");
+        const mcqData = {{ data | safe }};
+        console.log("JSON Data:", mcqData);
+
+        // Check if MCQ data is available
+        if (mcqData) {
+            console.log("Data is Here !")
+            const mcqContainer = document.getElementById('mcq-container');
+
+            // Iterate through MCQ data and create HTML elements
+            mcqData.forEach((questionData, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.classList.add('question');
+                
+                let shuffledChoices = shuffleArray(questionData.choices);
+
+                questionDiv.innerHTML = `
+                    <p>${index + 1}. ${questionData.question_text}</p>
+                    <ul class="choices">
+                        <li class="choice">${shuffledChoices[0]}</li>
+                        <li class="choice">${shuffledChoices[1]}</li>
+                        <li class="choice">${shuffledChoices[2]}</li>
+                        <li class="choice">${shuffledChoices[3]}</li>
+                    </ul>
+                `;
+                mcqContainer.appendChild(questionDiv);
+            });
+        } else {
+            // Handle the case when MCQ data is not available
+            console.error('MCQ data not found in localStorage');
+        }
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+    </script>
+</body>
+</html>
